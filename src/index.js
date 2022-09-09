@@ -13,7 +13,8 @@ class App extends React.Component {
             longitude: null,
             estacao: null,
             data: null,
-            icone: null
+            icone: null,
+            mensagemErro: null
         }
     }
 
@@ -34,10 +35,68 @@ class App extends React.Component {
         return sul ? 'Outono' : 'Primavera'
     }
 
+    // mapeamendo dos icones para cada estação
+    icones = {
+        'Primavera': 'fa-seedling',
+        'Verão': 'fa-umbrella-beach',
+        'Outono': 'fa-tree',
+        'Inverno': 'fa-snowman'
+    }
+
+    obterLocalizacao = () => {
+        window.navigator.geolocation.getCurrentPosition(
+            // callback
+            (posicao) => {
+                let data = new Date(); // pega a data atual quando não passa parametros
+                let {latitude, longitude }  = posicao.coords;
+                let estacao = this.obterEstacao(data, latitude);
+                let icone = this.icones[estacao];
+                console.log(icone);
+                this.setState({
+                    latitude,
+                    longitude,
+                    estacao,
+                    icone,
+                    data: data.toLocaleString(),
+                })
+            },
+            (err) => {
+                console.log(err);
+                this.setState({mensagemErro: 'Tent novamente mais tarde'});
+            }
+        )
+    }
+
     render(){
         return (
-            <div>
-                meu app
+            <div className='container mt-2'>
+                <div className="row justify-content-center">
+                    <div className="col-md-8">
+                        <div className="card">
+                            <div className="card-body">
+                                <div className="d-flex align-items-center border rounded mb-2" style={{height: '6rem'}}>
+                                    <i className={`fas fa-5x ${this.state.icone}`}></i>
+                                    <p className='w-75 ms-3 text-center fs-1'>{this.state.estacao}</p>
+
+                                </div>
+                            <div className="">
+                                <p className="text-center">
+                                    {
+                                        this.state.latitude?
+                                            `Coordenadas: ${this.state.latitude}, ${this.state.longitude}. Data: ${this.state.data}`
+                                        :
+                                            this.state.mensagemErro?
+                                                `${this.state.mensagemErro}`:
+                                                    `Clique no botão para saber a sua estação climática`
+                                    }
+                                </p>
+                            </div>
+                            <button type="button" className="btn btn-outline-success w-100 mt-2" onClick={this.obterLocalizacao}>Qual é a minha estação</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         )
     }
