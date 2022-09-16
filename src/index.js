@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { EstacaoClimatica } from './components/EstacaoClimatica';
+import { Loading } from './components/Loading';
 
 class App extends React.Component {
     constructor(props) {
@@ -17,7 +18,7 @@ class App extends React.Component {
         //     icone: null,
         //     mensagemErro: null
         // }
-        console.log("construtor");
+        // console.log("construtor");
     }
 
     state = {
@@ -30,16 +31,16 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        // this.obterLocalizacao();
+        this.obterLocalizacao();
     };
 
-    componentDidUpdate() {
-        console.log("componente update");
-    };
+    // componentDidUpdate() {
+    //     console.log("componente update");
+    // };
 
-    componentWillUnmount() {
-        console.log("componente unmount");
-    };
+    // componentWillUnmount() {
+    //     console.log("componente unmount");
+    // };
 
 
 
@@ -92,20 +93,30 @@ class App extends React.Component {
     }
 
     render() {
-        console.log("render")
+        // console.log("render")
         return (
             <div className='container mt-2'>
                 <div className="row justify-content-center">
                     <div className="col-md-8">
-                        <EstacaoClimatica
-                            icone={this.state.icone}
-                            estacao={this.state.estacao}
-                            latitude={this.state.latitude}
-                            longitude={this.state.longitude}
-                            data={this.state.data}
-                            mensagemErro={this.state.mensagemErro}
-                            obterLocalizacao={this.obterLocalizacao}
-                        />
+                        {
+                            !this.state.latitude && !this.state.mensagemErro ?
+                                <Loading
+                                    textLoading="Por favor, responda à solicitacção de localização."
+                                /> :
+                                this.state.mensagemErro ?
+                                    <p className='border rounded p-2 fs-1 texte-center'>
+                                        É preciso dar permissão para acesso à localização.
+                                        Atualize a página e tente de novo, ajustando a configuração do seu navegador.
+                                    </p>
+                                    :
+                                    <EstacaoClimatica
+                                        icone={this.state.icone}
+                                        estacao={this.state.estacao}
+                                        latitude={this.state.latitude}
+                                        longitude={this.state.longitude}
+                                        obterLocalizacao={this.obterLocalizacao}
+                                    />
+                        }
                     </div>
                 </div>
             </div>

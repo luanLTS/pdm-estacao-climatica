@@ -1,6 +1,12 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 export class EstacaoClimatica extends React.Component {
+    constructor(props) {
+        super(props);
+        console.log("contruiu EC");
+    };
+
 
     timer = null;
 
@@ -9,6 +15,7 @@ export class EstacaoClimatica extends React.Component {
     }
 
     componentDidMount() {
+        console.log("Montou EC");
         this.timer = setInterval(() => {
             this.setState({
                 data: new Date().toLocaleString(),
@@ -16,11 +23,17 @@ export class EstacaoClimatica extends React.Component {
         }, 1000);
     };
 
+    componentDidUpdate() {
+        console.log("atualizou EC");
+    }
+
     componentWillUnmount() {
+        console.log("Desmontou EC");
         clearInterval(this.timer);
     }
 
     render() {
+        console.log("Renderizou EC");
         return (
             <div className="card">
                 <div className="card-body">
@@ -35,9 +48,7 @@ export class EstacaoClimatica extends React.Component {
                                 this.props.latitude ?
                                     `Coordenadas: ${this.props.latitude}, ${this.props.longitude}. Data: ${this.state.data}`
                                     :
-                                    this.props.mensagemErro ?
-                                        `${this.props.mensagemErro}` :
-                                        `Clique no botão para saber a sua estação climática`
+                                    `Clique no botão para saber a sua estação climática`
                             }
                         </p>
                     </div>
@@ -47,6 +58,13 @@ export class EstacaoClimatica extends React.Component {
                         onClick={this.props.obterLocalizacao}
                     >
                         Qual é a minha estação
+                    </button>
+                    <button
+                        type='button'
+                        className="btn btn-outline-danger w-100 mt-2"
+                        onClick={() => ReactDOM.unmountComponentAtNode(document.getElementById("root"))}
+                    >
+                        Unmount
                     </button>
                 </div>
             </div>
